@@ -1,7 +1,8 @@
-FROM ://microsoft.com
+# Usamos la imagen oficial de .NET desde el registro de Docker Hub
+FROM docker.io/aspnetruntime/core:8.0
 WORKDIR /app
 
-# Copia los archivos publicados desde tu carpeta Out local hacia el contenedor
+# Copiamos tu carpeta compilada local
 COPY ./Out .
 
 ENV ASPNETCORE_URLS=http://+:8080
