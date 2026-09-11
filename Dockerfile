@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copiamos tu carpeta compilada local
-COPY ./Out .
+# CORRECCIÓN AQUÍ: Copiamos el CONTENIDO de adentro de la carpeta bin
+COPY ./Out/bin .
 
 # Configuramos el puerto para Render
 ENV ASPNETCORE_URLS=http://+:8080
