@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="C:\Users\greynozo\Documents\GitHub\PP2026_AsistenciaI46\Out" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Perfil1" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="Asistencia.aspx" publishTime="09/08/2026 16:41:07" />
+    <file relUrl="Principal.Master" publishTime="09/08/2026 15:06:15" />
+    <file relUrl="Login.aspx" publishTime="09/08/2026 16:39:32" />
+    <file relUrl="Web.config" publishTime="09/11/2026 11:35:26" />
+    <file relUrl="bin/PresentismoWebI46.dll" publishTime="09/11/2026 11:35:25" />
+    <file relUrl="bin/PresentismoWebI46.pdb" publishTime="09/11/2026 11:35:25" />
+    <file relUrl="Admin.aspx" publishTime="09/08/2026 14:50:05" />
+    <file relUrl="Global.asax" publishTime="09/08/2026 14:47:44" />
+    <file relUrl="Alumnos.aspx" publishTime="09/08/2026 15:08:36" />
+  </publishProfile>
+</publishData>
