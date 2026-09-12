@@ -1,0 +1,204 @@
+/**
+ * Estilos Principales del Sistema de Presentismo
+ * Frontend HTML5 + CSS3 + Vanilla JS
+ */
+
+:root {
+  --primary: #4338ca;
+  --primary-hover: #3730a3;
+  --primary-light: #eef2ff;
+  --primary-border: #c7d2fe;
+  
+  --presente: #059669;
+  --presente-bg: #ecfdf5;
+  --presente-border: #a7f3d0;
+  
+  --ausente: #e11d48;
+  --ausente-bg: #fff1f2;
+  --ausente-border: #fecdd3;
+  
+  --tarde: #d97706;
+  --tarde-bg: #fffbeb;
+  --tarde-border: #fde68a;
+  
+  --justificado: #2563eb;
+  --justificado-bg: #eff6ff;
+  --justificado-border: #bfdbfe;
+  
+  --slate-dark: #0f172a;
+  --slate-text: #334155;
+  --slate-muted: #64748b;
+  --slate-bg: #f8fafc;
+  --slate-card: #ffffff;
+}
+
+/* Base */
+body {
+  background-color: var(--slate-bg);
+  color: var(--slate-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Transiciones suaves */
+a, button, input, select, textarea {
+  transition: all 0.15s ease-in-out;
+}
+
+/* Botones de Estado de Asistencia (P, A, T, J) */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+  user-select: none;
+}
+
+.status-pill:hover {
+  background-color: #f1f5f9;
+}
+
+/* Estados Seleccionados */
+.status-pill.selected-P {
+  background-color: var(--presente) !important;
+  color: #ffffff !important;
+  border-color: var(--presente) !important;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.25);
+}
+
+.status-pill.selected-A {
+  background-color: var(--ausente) !important;
+  color: #ffffff !important;
+  border-color: var(--ausente) !important;
+  box-shadow: 0 2px 4px rgba(225, 29, 72, 0.25);
+}
+
+.status-pill.selected-T {
+  background-color: var(--tarde) !important;
+  color: #ffffff !important;
+  border-color: var(--tarde) !important;
+  box-shadow: 0 2px 4px rgba(217, 119, 6, 0.25);
+}
+
+.status-pill.selected-J {
+  background-color: var(--justificado) !important;
+  color: #ffffff !important;
+  border-color: var(--justificado) !important;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+}
+
+/* Badges de Regularidad */
+.badge-regular {
+  background-color: var(--presente-bg);
+  color: var(--presente);
+  border: 1px solid var(--presente-border);
+}
+
+.badge-riesgo {
+  background-color: var(--ausente-bg);
+  color: var(--ausente);
+  border: 1px solid var(--ausente-border);
+}
+
+.badge-observado {
+  background-color: var(--tarde-bg);
+  color: var(--tarde);
+  border: 1px solid var(--tarde-border);
+}
+
+/* Toast flotante de notificación */
+#toast-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#toast-notification.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Sábana Matricial: Celdas de Días */
+.matrix-cell {
+  text-align: center;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.matrix-cell.p {
+  background-color: #ecfdf5;
+  color: #047857;
+}
+
+.matrix-cell.a {
+  background-color: #fff1f2;
+  color: #be123c;
+}
+
+.matrix-cell.t {
+  background-color: #fffbeb;
+  color: #b45309;
+}
+
+.matrix-cell.j {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+/* Barra de navegación superior */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: #1e293b;
+  background-color: #f1f5f9;
+}
+
+.nav-link.active {
+  color: var(--primary);
+  background-color: var(--primary-light);
+  border: 1px solid var(--primary-border);
+}
+
+/* Estilos de Impresión */
+@media print {
+  body {
+    background-color: #ffffff !important;
+  }
+  
+  header, nav, .no-print, button:not(.print-include) {
+    display: none !important;
+  }
+  
+  .card, table {
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+  }
+  
+  th, td {
+    border: 1px solid #e2e8f0 !important;
+    padding: 6px 8px !important;
+  }
+}
