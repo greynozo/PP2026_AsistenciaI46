@@ -22,9 +22,9 @@ jobs:
     - name: Configurar NuGet
       uses: nuget/setup-nuget@v1
 
-    # 4. Restaurar paquetes forzando la compatibilidad de herramientas web modernas
+    # 4. Restaurar paquetes usando el parámetro correcto en plural
     - name: Restaurar Paquetes NuGet
-      run: nuget restore PresentismoWebI46.csproj -Property VisualStudioVersion=17.0
+      run: nuget restore PresentismoWebI46.csproj -Properties VisualStudioVersion=17.0
 
     # 5. Compilar y publicar el proyecto mapeando la versión compatible
     - name: Compilar y Publicar Proyecto
