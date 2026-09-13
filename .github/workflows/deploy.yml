@@ -18,20 +18,12 @@ jobs:
     - name: Configurar MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    # 3. Configurar NuGet
-    - name: Configurar NuGet
-      uses: nuget/setup-nuget@v1
-
-    # 4. Restaurar paquetes usando el parámetro correcto en plural
-    - name: Restaurar Paquetes NuGet
-      run: nuget restore PresentismoWebI46.csproj -Properties VisualStudioVersion=17.0
-
-    # 5. Compilar y publicar el proyecto mapeando la versión compatible
-    - name: Compilar y Publicar Proyecto
+    # 3. Restaurar y Compilar TODO junto en un solo paso con MSBuild
+    - name: Restaurar, Compilar y Publicar Proyecto
       run: |
-        msbuild PresentismoWebI46.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl="../publish" /p:DeleteExistingFiles=true /p:VisualStudioVersion=17.0
+        msbuild PresentismoWebI46.csproj /t:Restore;Build;Publish /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl="../publish" /p:DeleteExistingFiles=true /p:VisualStudioVersion=17.0
         
-    # 6. Subir el resultado al hosting vía FTP
+    # 4. Subir el resultado al hosting vía FTP
     - name: Subir archivos por FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
