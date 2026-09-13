@@ -2,3 +2,7 @@ C:\Users\greynozo\Documents\GitHub\PP2026_AsistenciaI46\bin\PresentismoWebI46.dl
 C:\Users\greynozo\Documents\GitHub\PP2026_AsistenciaI46\bin\PresentismoWebI46.pdb
 C:\Users\greynozo\Documents\GitHub\PP2026_AsistenciaI46\obj\Release\PresentismoWebI46.dll
 C:\Users\greynozo\Documents\GitHub\PP2026_AsistenciaI46\obj\Release\PresentismoWebI46.pdb
+C:\Users\Gonzalo\Documents\GitHub\PP2026_AsistenciaI46\bin\PresentismoWebI46.dll
+C:\Users\Gonzalo\Documents\GitHub\PP2026_AsistenciaI46\bin\PresentismoWebI46.pdb
+C:\Users\Gonzalo\Documents\GitHub\PP2026_AsistenciaI46\obj\Release\PresentismoWebI46.dll
+C:\Users\Gonzalo\Documents\GitHub\PP2026_AsistenciaI46\obj\Release\PresentismoWebI46.pdb
