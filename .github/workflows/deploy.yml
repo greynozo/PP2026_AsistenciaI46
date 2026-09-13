@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest  # IMPORTANTE: Usamos Windows para compilar .NET clásico
+    runs-on: windows-latest  # Usamos servidores Windows nativos de GitHub
 
     steps:
     # 1. Descargar el código de tu repositorio
@@ -22,15 +22,14 @@ jobs:
     - name: Configurar NuGet
       uses: nuget/setup-nuget@v1
 
-    # 4. Restaurar paquetes NuGet del proyecto
+    # 4. Restaurar paquetes NuGet del proyecto saltándose restricciones rígidas de MSBuild
     - name: Restaurar Paquetes NuGet
-      run: nuget restore PresentismoWebI46.csproj
+      run: nuget restore PresentismoWebI46.csproj -MSBuildPath "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin"
 
-    # 5. Compilar y publicar el proyecto en una carpeta temporal llamada 'publish'
+    # 5. Compilar y publicar el proyecto remapeando la ruta de WebApplication.targets al entorno moderno
     - name: Compilar y Publicar Proyecto
       run: |
-        msbuild PresentismoWebI46.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl="../publish" /p:DeleteExistingFiles=true
-
+        msbuild PresentismoWebI46.csproj /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl="../publish" /p:DeleteExistingFiles=true /p:VisualStudioVersion=17.0 /p:MSBuildExtensionsPath32="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild"
     # 6. Subir el resultado al hosting vía FTP
     - name: Subir archivos por FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
