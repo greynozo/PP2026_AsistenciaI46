@@ -1,44 +1,321 @@
+````yaml
 name: Despliegue Automático .NET Framework a SmarterASP.NET
 
 on:
   push:
     branches:
-      - main  # Se ejecuta automáticamente cada vez que subís cambios a main
+      - main
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest  # Servidores Windows estables de GitHub
+
+    runs-on: windows-latest
 
     steps:
-    # 1. Descargar el código de tu repositorio
-    - name: Checkout del código
-      uses: actions/checkout@v4
 
-    # 2. Configurar MSBuild
-    - name: Configurar MSBuild
-      uses: microsoft/setup-msbuild@v2
+      # ============================================================
+      # 1. Descargar el repositorio
+      # ============================================================
+      - name: Descargar código
+        uses: actions/checkout@v4
 
-    # 3. EL TRUCO DEFINITIVO: Reemplazar la ruta fija v10.0 por la ruta moderna compatible de forma automática
-    - name: Corregir compatibilidad del .csproj
-      run: |
-        (Get-Content PresentismoWebI46.csproj) -replace '\\v10.0\\WebApplications\\Microsoft.WebApplication.targets', '$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets' | Set-Content PresentismoWebI46.csproj
-      shell: powershell
 
-    # 4. Restaurar los paquetes NuGet de forma limpia
-    - name: Restaurar Paquetes
-      run: msbuild PresentismoWebI46.csproj /t:Restore
+      # ============================================================
+      # 2. Configurar MSBuild
+      # ============================================================
+      - name: Configurar MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-    # 5. Compilar y Publicar usando la estructura estándar y moderna de Visual Studio
-    - name: Compilar y Publicar Proyecto
-      run: |
-        msbuild PresentismoWebI46.csproj /t:Build /p:Configuration=Release /p:OutDir=../publish/
-        
-    # 6. Subir el resultado al hosting vía FTP
-    - name: Subir archivos por FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./publish/
-        server-dir: /siteroot/  # Carpeta pública principal de SmarterASP.NET
+
+      # ============================================================
+      # 3. Instalar WebApplication Targets
+      #
+      # El proyecto es de Visual Web Developer 2010 y utiliza:
+      #
+      # $(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\
+      # WebApplications\Microsoft.WebApplication.targets
+      #
+      # GitHub Windows no trae esos targets antiguos.
+      #
+      # Instalamos el paquete que contiene los WebApplication Targets
+      # y luego creamos la estructura v10.0 que espera el proyecto.
+      # ============================================================
+      - name: Preparar WebApplication Targets
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          Write-Host "Descargando MSBuild.Microsoft.VisualStudio.Web.targets..."
+
+          $nuget = "$env:RUNNER_TEMP\nuget.exe"
+
+          Invoke-WebRequest `
+            -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" `
+            -OutFile $nuget
+
+          $packageDir = "$env:RUNNER_TEMP\webtargets"
+
+          if (Test-Path $packageDir) {
+              Remove-Item $packageDir -Recurse -Force
+          }
+
+          New-Item -ItemType Directory -Path $packageDir -Force | Out-Null
+
+          & $nuget install `
+            MSBuild.Microsoft.VisualStudio.Web.targets `
+            -Version 14.0.0.3 `
+            -OutputDirectory $packageDir `
+            -NonInteractive
+
+          if ($LASTEXITCODE -ne 0) {
+              throw "No se pudo descargar MSBuild.Microsoft.VisualStudio.Web.targets"
+          }
+
+          Write-Host ""
+          Write-Host "Contenido descargado:"
+          Get-ChildItem $packageDir -Recurse | Select-Object FullName
+
+          # Buscar el directorio VSToolsPath incluido en el paquete.
+          $vsTools = Get-ChildItem `
+            -Path $packageDir `
+            -Directory `
+            -Recurse `
+            -Filter "VSToolsPath" |
+            Select-Object -First 1
+
+          if (-not $vsTools) {
+              throw "No se encontró VSToolsPath dentro del paquete Web Targets."
+          }
+
+          Write-Host ""
+          Write-Host "VSToolsPath encontrado en:"
+          Write-Host $vsTools.FullName
+
+          # El proyecto antiguo busca:
+          #
+          # C:\Program Files (x86)\MSBuild\
+          # Microsoft\VisualStudio\v10.0\WebApplications\
+          #
+          $destination = `
+            "${env:ProgramFiles(x86)}\MSBuild\Microsoft\VisualStudio\v10.0"
+
+          Write-Host ""
+          Write-Host "Creando destino:"
+          Write-Host $destination
+
+          New-Item `
+            -ItemType Directory `
+            -Path $destination `
+            -Force | Out-Null
+
+          Copy-Item `
+            "$($vsTools.FullName)\*" `
+            $destination `
+            -Recurse `
+            -Force
+
+          Write-Host ""
+          Write-Host "WebApplication Targets instalados."
+
+          $targetFile = Join-Path `
+            $destination `
+            "WebApplications\Microsoft.WebApplication.targets"
+
+          if (-not (Test-Path $targetFile)) {
+              throw "NO se encontró Microsoft.WebApplication.targets en $targetFile"
+          }
+
+          Write-Host ""
+          Write-Host "OK - Microsoft.WebApplication.targets:"
+          Write-Host $targetFile
+
+
+      # ============================================================
+      # 4. Verificar el archivo antes de compilar
+      # ============================================================
+      - name: Verificar proyecto
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          Write-Host "Directorio actual:"
+          Get-Location
+
+          Write-Host ""
+          Write-Host "Contenido:"
+          Get-ChildItem
+
+          if (-not (Test-Path "PresentismoWebI46.csproj")) {
+              throw "No se encontró PresentismoWebI46.csproj"
+          }
+
+          Write-Host ""
+          Write-Host "Proyecto encontrado correctamente."
+
+          Write-Host ""
+          Write-Host "Verificando WebApplication.targets..."
+
+          $target = `
+            "${env:ProgramFiles(x86)}\MSBuild\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets"
+
+          if (-not (Test-Path $target)) {
+              throw "Microsoft.WebApplication.targets no está disponible."
+          }
+
+          Write-Host "OK: $target"
+
+
+      # ============================================================
+      # 5. Crear carpeta de publicación
+      # ============================================================
+      - name: Preparar carpeta publish
+        shell: powershell
+        run: |
+          $publish = Join-Path $env:GITHUB_WORKSPACE "publish"
+
+          if (Test-Path $publish) {
+              Remove-Item $publish -Recurse -Force
+          }
+
+          New-Item `
+            -ItemType Directory `
+            -Path $publish `
+            -Force | Out-Null
+
+          Write-Host "Carpeta creada:"
+          Write-Host $publish
+
+
+      # ============================================================
+      # 6. Compilar proyecto
+      #
+      # IMPORTANTE:
+      # Por ahora hacemos BUILD y no Publish.
+      #
+      # Primero necesitamos comprobar que el proyecto antiguo
+      # compile correctamente en GitHub Actions.
+      # ============================================================
+      - name: Compilar proyecto
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          msbuild PresentismoWebI46.csproj `
+            /t:Build `
+            /p:Configuration=Release `
+            /p:Platform="Any CPU" `
+            /p:OutDir="$env:GITHUB_WORKSPACE\publish\"
+
+          if ($LASTEXITCODE -ne 0) {
+              throw "MSBuild terminó con errores."
+          }
+
+
+      # ============================================================
+      # 7. Mostrar resultado de compilación
+      # ============================================================
+      - name: Verificar archivos generados
+        shell: powershell
+        run: |
+          $publish = Join-Path $env:GITHUB_WORKSPACE "publish"
+
+          Write-Host ""
+          Write-Host "=========================================="
+          Write-Host "CONTENIDO DE PUBLISH"
+          Write-Host "=========================================="
+          Write-Host ""
+
+          if (-not (Test-Path $publish)) {
+              throw "No existe la carpeta publish."
+          }
+
+          Get-ChildItem `
+            $publish `
+            -Recurse |
+            Select-Object FullName, Length
+
+          Write-Host ""
+          Write-Host "=========================================="
+          Write-Host "BUILD FINALIZADO CORRECTAMENTE"
+          Write-Host "=========================================="
+
+
+      # ============================================================
+      # 8. Subir archivos al hosting mediante FTP
+      #
+      # ESTA PARTE SE EJECUTA SOLAMENTE SI TODAS LAS ETAPAS
+      # ANTERIORES TERMINARON CORRECTAMENTE.
+      # ============================================================
+      - name: Desplegar en SmarterASP mediante FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./publish/
+          server-dir: /siteroot/
+          protocol: ftp
+          port: 21
+          dangerous-clean-slate: false
+
+### Pero hay una decisión importante
+
+Fijate que **dejé el FTP al final, pero todavía no intentamos hacer el deploy real de la aplicación**.
+
+La primera ejecución nos va a servir para responder:
+
+> ¿GitHub puede compilar `PresentismoWebI46`?
+
+Si obtenemos:
+
+```text
+BUILD FINALIZADO CORRECTAMENTE
+````
+
+vamos al siguiente problema.
+
+Y hay una buena razón para hacerlo así: si falla, sabremos que **no es FTP**.
+
+---
+
+### Una corrección respecto del YAML anterior
+
+Eliminé completamente esto:
+
+```yaml
+- name: Corregir compatibilidad del .csproj
+```
+
+No quiero que GitHub modifique:
+
+```text
+PresentismoWebI46.csproj
+```
+
+El proyecto queda intacto. El runner se adapta al proyecto, que es mucho más apropiado para tu situación.
+
+También usamos `MSBuild.Microsoft.VisualStudio.Web.targets 14.0.0.3`, que es un paquete específicamente destinado a proporcionar estos targets en servidores de build y cuya estructura contiene los archivos bajo `tools\VSToolsPath`.
+
+### Ojo con `publish/`
+
+Hay otra cosa que **todavía no doy por resuelta**.
+
+Esta línea:
+
+```yaml
+/p:OutDir="$env:GITHUB_WORKSPACE\publish\"
+```
+
+nos permitirá comprobar qué produce el build, pero **no significa necesariamente que `publish/` sea todavía una publicación completa lista para SmarterASP**.
+
+Primero quiero ver el resultado.
+
+Si esta ejecución termina en:
+
+```text
+BUILD SUCCEEDED
+```
+
+pasamos a la segunda etapa y hacemos que `publish/` contenga exactamente lo que necesita tu sitio ASP.NET: `.aspx`, `.config`, `.dll`, `bin`, imágenes, CSS, JS, etc., y recién después ajustamos el FTP.
+
+**No cambies tu `.csproj` ni agregues `packages.config` o `PackageReference`.** El objetivo es que GitHub se adapte a tu proyecto viejo, no al revés.
