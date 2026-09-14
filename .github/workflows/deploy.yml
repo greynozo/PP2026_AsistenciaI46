@@ -20,12 +20,12 @@ jobs:
 
     # 3. Restaurar los paquetes NuGet de forma aislada
     - name: Restaurar Paquetes
-      run: msbuild PresentismoWebI46.csproj /t:Restore /p:VisualStudioVersion=17.0
+      run: msbuild PresentismoWebI46.csproj /t:Restore /p:MSBuildExtensionsPath32="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild" /p:VisualStudioVersion=17.0
 
-    # 4. COMPILACIÓN DEFINITIVA: Usamos el target Build tradicional y redirigimos la salida
+    # 4. COMPILACIÓN DEFINITIVA: Inyectamos la extensión web moderna en la variable que el .csproj usa para buscar
     - name: Compilar y Publicar Proyecto
       run: |
-        msbuild PresentismoWebI46.csproj /t:Build /p:Configuration=Release /p:OutDir=../publish/ /p:VisualStudioVersion=17.0
+        msbuild PresentismoWebI46.csproj /t:Build /p:Configuration=Release /p:OutDir=../publish/ /p:VisualStudioVersion=17.0 /p:MSBuildExtensionsPath32="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild"
         
     # 5. Subir el resultado al hosting vía FTP
     - name: Subir archivos por FTP
