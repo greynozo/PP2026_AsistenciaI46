@@ -1,6 +1,6 @@
 name: Deploy Presentismo
 
-on:
+"on":
 push:
 branches:
 - main
@@ -8,18 +8,5 @@ branches:
 jobs:
 build:
 runs-on: windows-latest
-
-```
 steps:
-  - name: Checkout
-    uses: actions/checkout@v4
-
-  - name: Configurar MSBuild
-    uses: microsoft/setup-msbuild@v2
-
-  - name: Verificar MSBuild
-    run: msbuild -version
-
-  - name: Verificar archivos
-    run: dir
-```
+- uses: actions/checkout@v4
