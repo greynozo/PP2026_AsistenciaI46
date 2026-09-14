@@ -16,9 +16,9 @@ jobs:
       - name: Publicar en SmarterASP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: win8067.site4now.net
-          username: greynozo27-001
-          password: Malvinas.46
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           local-dir: ./Out/
           server-dir: /
