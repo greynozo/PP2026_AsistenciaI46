@@ -67,9 +67,12 @@
                     </label>
                     <input id="docente-password" type="password" value="••••••••" required="" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white">
                 </div>
-                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
+         <%--       <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
                     <i class="fa-solid fa-arrow-right-to-bracket"></i><span>Ingresar al Panel Docente</span>
-                </button>
+                </button>--%>
+                <a href="WF_Docente_Alumnos.aspx" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i><span>Ingresar al Panel Docente</span>>
+                </a>
                 </form>
                 <!-- Accesos Rápidos con datos dentro del HTML -->
                 <div class="pt-3 border-t border-slate-100">
@@ -135,9 +138,12 @@
                     </label>
                     <input type="password" value="secretaria2026" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white">
                 </div>
-                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
+                <%--<button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
                     <i class="fa-solid fa-lock-open text-xs"></i><span>Ingresar al Panel de Gestión</span>
-                </button>
+                </button>--%>
+                <a href="WF_Admin_Alumnos.aspx"class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
+                    <i class="fa-solid fa-lock-open text-xs"></i><span>Ingresar al Panel de Gestión</span>>
+                </a>
                 </form>
             </div>
         </div>
