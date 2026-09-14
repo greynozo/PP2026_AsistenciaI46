@@ -1,5 +1,4 @@
-```yaml
-name: Despliegue Automático .NET Framework a SmarterASP.NET
+name: Deploy Presentismo
 
 on:
   push:
@@ -7,170 +6,16 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: windows-latest
 
     steps:
-      - name: Descargar código
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configurar MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Instalar WebApplication Targets
+      - name: Test
         shell: powershell
         run: |
-          $ErrorActionPreference = "Stop"
-
-          Write-Host "Descargando NuGet..."
-
-          $nuget = "$env:RUNNER_TEMP\nuget.exe"
-
-          Invoke-WebRequest `
-            -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" `
-            -OutFile $nuget
-
-          $packageDir = "$env:RUNNER_TEMP\webtargets"
-
-          if (Test-Path $packageDir) {
-            Remove-Item $packageDir -Recurse -Force
-          }
-
-          New-Item -ItemType Directory -Path $packageDir -Force | Out-Null
-
-          Write-Host "Instalando WebApplication Targets..."
-
-          & $nuget install MSBuild.Microsoft.VisualStudio.Web.targets `
-            -Version 14.0.0.3 `
-            -OutputDirectory $packageDir `
-            -NonInteractive
-
-          if ($LASTEXITCODE -ne 0) {
-            throw "No se pudo instalar MSBuild.Microsoft.VisualStudio.Web.targets"
-          }
-
-          Write-Host "Buscando VSToolsPath..."
-
-          $vsTools = Get-ChildItem `
-            -Path $packageDir `
-            -Directory `
-            -Recurse `
-            -Filter "VSToolsPath" |
-            Select-Object -First 1
-
-          if (-not $vsTools) {
-            throw "No se encontró VSToolsPath."
-          }
-
-          Write-Host "VSToolsPath encontrado:"
-          Write-Host $vsTools.FullName
-
-          $destination = "${env:ProgramFiles(x86)}\MSBuild\Microsoft\VisualStudio\v10.0"
-
-          Write-Host "Creando:"
-          Write-Host $destination
-
-          New-Item `
-            -ItemType Directory `
-            -Path $destination `
-            -Force | Out-Null
-
-          Copy-Item `
-            "$($vsTools.FullName)\*" `
-            $destination `
-            -Recurse `
-            -Force
-
-          $targetFile = Join-Path `
-            $destination `
-            "WebApplications\Microsoft.WebApplication.targets"
-
-          if (-not (Test-Path $targetFile)) {
-            throw "No se encontró Microsoft.WebApplication.targets en $targetFile"
-          }
-
-          Write-Host "WebApplication Targets preparados correctamente."
-
-
-      - name: Verificar proyecto
-        shell: powershell
-        run: |
-          $ErrorActionPreference = "Stop"
-
-          if (-not (Test-Path "PresentismoWebI46.csproj")) {
-            throw "No se encontró PresentismoWebI46.csproj"
-          }
-
-          Write-Host "Proyecto encontrado correctamente."
-
-          $target = "${env:ProgramFiles(x86)}\MSBuild\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets"
-
-          if (-not (Test-Path $target)) {
-            throw "Microsoft.WebApplication.targets no está disponible."
-          }
-
-          Write-Host "Target encontrado:"
-          Write-Host $target
-
-
-      - name: Preparar carpeta de publicación
-        shell: powershell
-        run: |
-          $publish = "$env:GITHUB_WORKSPACE\publish"
-
-          if (Test-Path $publish) {
-            Remove-Item $publish -Recurse -Force
-          }
-
-          New-Item `
-            -ItemType Directory `
-            -Path $publish `
-            -Force | Out-Null
-
-          Write-Host "Carpeta publish creada."
-
-
-      - name: Compilar proyecto
-        shell: powershell
-        run: |
-          $ErrorActionPreference = "Stop"
-
-          msbuild PresentismoWebI46.csproj `
-            /t:Build `
-            /p:Configuration=Release `
-            /p:Platform="Any CPU" `
-            /p:OutDir="$env:GITHUB_WORKSPACE\publish\"
-
-          if ($LASTEXITCODE -ne 0) {
-            throw "MSBuild terminó con errores."
-          }
-
-          Write-Host "BUILD COMPLETADO CORRECTAMENTE."
-
-
-      - name: Mostrar archivos generados
-        shell: powershell
-        run: |
-          $publish = "$env:GITHUB_WORKSPACE\publish"
-
-          Write-Host ""
-          Write-Host "======================================"
-          Write-Host "ARCHIVOS GENERADOS"
-          Write-Host "======================================"
-
-          Get-ChildItem $publish -Recurse |
-            Select-Object FullName, Length
-
-
-      - name: Desplegar en SmarterASP mediante FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./publish/
-          server-dir: /siteroot/
-          protocol: ftp
-          port: 21
-          dangerous-clean-slate: false
-```
+          Write-Host "GitHub Actions funciona correctamente"
+          Write-Host "Proyecto descargado:"
+          Get-ChildItem
