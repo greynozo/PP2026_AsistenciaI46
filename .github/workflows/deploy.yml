@@ -1,62 +1,38 @@
-```yaml
 name: Deploy Presentismo
 
 on:
-  push:
-    branches:
-      - main
+push:
+branches:
+- main
 
 jobs:
-  build:
-    runs-on: windows-latest
+build:
+runs-on: windows-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+```
+steps:
+  - name: Checkout
+    uses: actions/checkout@v4
 
-      - name: Configurar MSBuild
-        uses: microsoft/setup-msbuild@v2
+  - name: Configurar MSBuild
+    uses: microsoft/setup-msbuild@v2
 
-      - name: Descargar WebApplication Targets
-        shell: powershell
-        run: |
-          $ErrorActionPreference = "Stop"
+  - name: Verificar MSBuild
+    shell: powershell
+    run: |
+      msbuild -version
 
-          $nuget = "$env:RUNNER_TEMP\nuget.exe"
-          $packageDir = "$env:RUNNER_TEMP\webtargets"
+  - name: Verificar proyecto
+    shell: powershell
+    run: |
+      if (-not (Test-Path "PresentismoWebI46.csproj")) {
+        throw "No se encontró PresentismoWebI46.csproj"
+      }
 
-          Write-Host "Descargando NuGet..."
+      Write-Host "Proyecto encontrado correctamente."
 
-          Invoke-WebRequest `
-            -Uri "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" `
-            -OutFile $nuget
-
-          if (Test-Path $packageDir) {
-            Remove-Item $packageDir -Recurse -Force
-          }
-
-          New-Item `
-            -ItemType Directory `
-            -Path $packageDir `
-            -Force | Out-Null
-
-          Write-Host "Descargando MSBuild.Microsoft.VisualStudio.Web.targets..."
-
-          & $nuget install `
-            MSBuild.Microsoft.VisualStudio.Web.targets `
-            -Version 14.0.0.3 `
-            -OutputDirectory $packageDir `
-            -NonInteractive
-
-          if ($LASTEXITCODE -ne 0) {
-            throw "No se pudo descargar el paquete WebApplication Targets."
-          }
-
-          Write-Host ""
-          Write-Host "Paquete descargado:"
-          Get-ChildItem $packageDir -Recurse -File |
-            Select-Object FullName
-
-
-      - name: Instalar
+  - name: Compilar proyecto
+    shell: powershell
+    run: |
+      msbuild PresentismoWebI46.csproj /t:Build /p:Configuration=Release /p:Platform="Any CPU"
 ```
