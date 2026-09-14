@@ -18,12 +18,15 @@ jobs:
     - name: Configurar MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    # 3. Restaurar y Compilar TODO junto en un solo paso con MSBuild
-    - name: Restaurar, Compilar y Publicar Proyecto
-      run: |
-        msbuild PresentismoWebI46.csproj /t:Restore;Build;Publish /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl="../publish" /p:DeleteExistingFiles=true /p:VisualStudioVersion=17.0
+    # 3. Restaurar los paquetes NuGet de forma aislada con MSBuild
+    - name: Restaurar Paquetes
+      run: msbuild PresentismoWebI46.csproj /t:Restore /p:VisualStudioVersion=17.0
+
+    # 4. Compilar y Publicar el proyecto en la carpeta externa
+    - name: Compilar y Publicar
+      run: msbuild PresentismoWebI46.csproj /t:Publish /p:Configuration=Release /p:DeployOnBuild=true /p:PublishUrl=../publish /p:DeleteExistingFiles=true /p:VisualStudioVersion=17.0
         
-    # 4. Subir el resultado al hosting vía FTP
+    # 5. Subir el resultado al hosting vía FTP
     - name: Subir archivos por FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
