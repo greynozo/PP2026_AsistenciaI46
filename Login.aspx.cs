@@ -12,6 +12,8 @@ namespace PresentismoWebI46
 {
     public partial class Login : System.Web.UI.Page
     {
+        private static string Cadena = ConfigurationManager.ConnectionStrings["CadenaProd"].ToString();
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -22,11 +24,11 @@ namespace PresentismoWebI46
             string usuario = txtDocente.Text.Trim();
             string password = txtPasswordDocente.Text.Trim();
 
-            string cadena = @"Data Source=SMS-NTBK-457\SQLEXPRESS;
-                            Initial Catalog=AsistenciaAcademica;
-                            Integrated Security=True";
+//            string cadena = @"Data Source=SMS-NTBK-457\SQLEXPRESS;
+//                            Initial Catalog=AsistenciaAcademica;
+//                            Integrated Security=True";
 
-            using (SqlConnection cn = new SqlConnection(cadena))
+            using (SqlConnection cn = new SqlConnection(Cadena))
             {
                 string sql = @"
             SELECT NivelUsuario
@@ -73,12 +75,12 @@ namespace PresentismoWebI46
             string usuario = TxtAdmin.Text.Trim();
             string password = TxtPasswordAdmin.Text.Trim();
 
-            string cadena =
-            @"Data Source=SMS-NTBK-457\SQLEXPRESS;
-      Initial Catalog=AsistenciaAcademica;
-      Integrated Security=True";
+//            string cadena =
+//            @"Data Source=SMS-NTBK-457\SQLEXPRESS;
+//      Initial Catalog=AsistenciaAcademica;
+//      Integrated Security=True";
 
-            using (SqlConnection cn = new SqlConnection(cadena))
+            using (SqlConnection cn = new SqlConnection(Cadena))
             {
                 string sql = @"
             SELECT NivelUsuario
