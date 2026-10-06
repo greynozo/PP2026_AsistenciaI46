@@ -12,7 +12,7 @@ namespace PresentismoWebI46
 {
     public partial class Login : System.Web.UI.Page
     {
-        private static string Cadena = ConfigurationManager.ConnectionStrings["CadenaProd"].ToString();
+        private static string Cadena = ConfigurationManager.ConnectionStrings["CadenaProd"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {

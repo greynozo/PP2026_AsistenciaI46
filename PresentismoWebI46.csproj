@@ -90,6 +90,7 @@
     <Compile Include="Admin.Master.designer.cs">
       <DependentUpon>Admin.Master</DependentUpon>
     </Compile>
+    <Compile Include="AsistenciaDAL.cs" />
     <Compile Include="Docentes.Master.cs">
       <DependentUpon>Docentes.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
