@@ -6,3 +6,17 @@ C:\Users\Gonzalo\Documents\GitHub\PP2026_AsistenciaI46\bin\PresentismoWebI46.dll
 C:\Users\Gonzalo\Documents\GitHub\PP2026_AsistenciaI46\bin\PresentismoWebI46.pdb
 C:\Users\Gonzalo\Documents\GitHub\PP2026_AsistenciaI46\obj\Release\PresentismoWebI46.dll
 C:\Users\Gonzalo\Documents\GitHub\PP2026_AsistenciaI46\obj\Release\PresentismoWebI46.pdb
+C:\Users\jdagostino\Desktop\proyecto\bin\PresentismoWebI46.dll
+C:\Users\jdagostino\Desktop\proyecto\bin\PresentismoWebI46.pdb
+C:\Users\jdagostino\Desktop\proyecto\obj\Release\PresentismoWebI46.dll
+C:\Users\jdagostino\Desktop\proyecto\obj\Release\PresentismoWebI46.pdb
+C:\Users\jdagostino\Desktop\Sistema de Asistencias\bin\PresentismoWebI46.dll
+C:\Users\jdagostino\Desktop\Sistema de Asistencias\bin\PresentismoWebI46.pdb
+C:\Users\jdagostino\Desktop\Sistema de Asistencias\obj\Release\PresentismoWebI46.dll
+C:\Users\jdagostino\Desktop\Sistema de Asistencias\obj\Release\PresentismoWebI46.pdb
+D:\Sistema de Asistencias\bin\PresentismoWebI46.dll
+D:\Sistema de Asistencias\bin\PresentismoWebI46.pdb
+D:\Sistema de Asistencias\obj\Release\PresentismoWebI46.dll
+D:\Sistema de Asistencias\obj\Release\PresentismoWebI46.pdb
+D:\Sistema de Asistencias\obj\Release\PresentismoWebI46.csprojResolveAssemblyReference.cache
+C:\Users\greynozo\Documents\GitHub\PP2026_AsistenciaI46\obj\Release\PresentismoWebI46.csprojResolveAssemblyReference.cache

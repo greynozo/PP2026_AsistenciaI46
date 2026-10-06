@@ -13,6 +13,11 @@
     <!-- Estilos Propios -->
     <link rel="stylesheet" href="Estilos/css/styles.css">
 </head>
+<script>
+    function logout() {
+        window.location.href = "Logout.aspx";
+    }
+</script>
 <body>
     <div id="navbar-container">
         <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-2xs">
@@ -73,6 +78,11 @@
         <i class="fa-solid fa-chalkboard-user"></i>
         <span>Docentes</span>
       </a>
+     <a id="menuUsuarios" runat="server"
+   href="WF_Admin_Usuario.aspx" class="nav-link ">
+   <i class="fa-solid fa-user"></i>
+   <span>Usuarios</span>
+      </a>
 <%--      <a href="asistencia.html" class="nav-link ">
         <i class="fa-solid fa-clipboard-check"></i>
         <span>Pasar Lista</span>
@@ -89,14 +99,17 @@
             
               <div class="flex items-center gap-2.5 pl-3 border-l border-slate-200">
                 <div class="text-right hidden sm:block">
-                  <span class="block text-xs font-bold text-slate-800 leading-tight">Bedelía Central</span>
+                  <span class="block text-xs font-bold text-slate-800 leading-tight"></span>
                   <span class="block text-[10px] font-semibold text-amber-600 uppercase">
                     Administrativo
                   </span>
                 </div>
-                <button type="button" onclick="logout()" title="Cerrar sesión" class="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer">
-                  <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
-                </button>
+               <button type="button"
+        onclick="window.location.href='Logout.aspx';"
+        title="Cerrar sesión"
+        class="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer">
+    <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
+</button>
               </div>
             
           </div>

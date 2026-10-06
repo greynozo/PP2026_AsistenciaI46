@@ -11,7 +11,18 @@ namespace PresentismoWebI46
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["Usuario"] == null)
+            {
+                Response.Redirect("~/Login.aspx");
+                return;
+            }
 
+            int nivel = Convert.ToInt32(Session["NivelUsuario"]);
+
+            if (nivel != 2)
+            {
+                Response.Redirect("~/Login.aspx");
+            }
         }
     }
 }
